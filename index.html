@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIDO Metatada Explorer</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>FIDO Metadata Explorer</h1>
+        <p>Explore advertised features for certified authenticators</p>
+        <p id="metadata-version"></p>
+    </header>
+    
+    <main>
+        <div id="results" class="results-container">
+            <p>Loading data...</p>
+        </div>
+    </main>
+
+    <footer>
+        <p id="legal-header"></p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
