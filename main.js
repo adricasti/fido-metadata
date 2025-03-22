@@ -31,9 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         <tr>
                             <th>Icon</th>
                             <th>Description</th>
-                            <th>Protocol Family</th>
-                            <th>Status</th>
-                            <th>Last Updated</th>
+                            <th>Protocol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            <th>Updated&nbsp;&nbsp;</th>
                             <th>Extensions</th>
                             <th>Options</th>
                         </tr>
@@ -47,6 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const ms = entry.metadataStatement;
                 const id = ms.aaguid || ms.aaid || ms.attestationCertificateKeyIdentifiers?.[0] || 'N/A';
                 const status = entry.statusReports && entry.statusReports[0]?.status || 'N/A';
+                let level = status === 'FIDO_CERTIFIED_L2' ? ' (L2)' : status === 'FIDO_CERTIFIED_L1' ? ' (L1)' : '';
 
                 // Format lastUpdated as YYWnn
                 let formattedDate = 'N/A';
@@ -84,8 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     </td>
                     <td><span class="tooltip">${ms.description || 'N/A'}<span class="tooltiptext">${id}</span></span></td>
-                    <td>${ms.protocolFamily || 'N/A'}</td>
-                    <td>${status}</td>
+                    <td>${ms.protocolFamily.toUpperCase() + level || 'N/A'}</td>
                     <td data-sort="${entry.timeOfLastStatusChange || ''}">${formattedDate}</td>
                     <td>${extensions}</td>
                     <td>${options}</td>
