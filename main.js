@@ -64,16 +64,68 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
 
-                // Process extensions (array of strings)
-                let extensions = 'N/A';
+                // Process extensions with visual representations
+                let extensions = '';
                 if (ms.authenticatorGetInfo && ms.authenticatorGetInfo.extensions) {
-                    extensions = ms.authenticatorGetInfo.extensions.join('<br>');
+                    const supportedExtensions = ms.authenticatorGetInfo.extensions;
+                    const extensionMap = {
+                        'hmac-secret': '🔐',
+                        'credProtect': '🛡️',
+                        'largeBlobKey': '🔑',
+                        'credBlob': '📦',
+                        'minPinLength': '📏',
+                        'hmac-secret-mc': '🔐+',
+                        'devicePubKey': '🗝️',
+                        'prf': '🎲',
+                        'largeBlobs': '📁',
+                        'uvm': '👤',
+                        'credProps': '⚙️'
+                    };
+                    
+                    extensions = supportedExtensions.map(ext => {
+                        const icon = extensionMap[ext] || '❓';
+                        return `<span class="extension-badge" title="${ext}">${icon}</span>`;
+                    }).join(' ');
+                    
+                    if (extensions === '') extensions = 'None';
+                } else {
+                    extensions = 'N/A';
                 }
 
-                // Process options (object keys)
-                let options = 'N/A';
+                // Process options with visual representations
+                let options = '';
                 if (ms.authenticatorGetInfo && ms.authenticatorGetInfo.options) {
-                    options = Object.keys(ms.authenticatorGetInfo.options).join('<br>');
+                    const supportedOptions = Object.keys(ms.authenticatorGetInfo.options);
+                    const optionMap = {
+                        'plat': '💻',
+                        'rk': '💾',
+                        'clientPin': '🔢',
+                        'up': '👆',
+                        'uv': '👁️',
+                        'pinUvAuthToken': '🎫',
+                        'noMcGaPermissionsWithClientPin': '🚫',
+                        'largeBlobs': '📁',
+                        'ep': '🏢',
+                        'bioEnroll': '👆📝',
+                        'userVerificationMgmtPreview': '👤⚙️',
+                        'uvBioEnroll': '👁️📝',
+                        'authnrCfg': '⚙️',
+                        'uvAcfg': '👁️⚙️',
+                        'credMgmt': '📋',
+                        'credentialMgmtPreview': '📋👁️',
+                        'setMinPINLength': '📏🔢',
+                        'makeCredUvNotRqd': '✅',
+                        'alwaysUv': '👁️🔒'
+                    };
+                    
+                    options = supportedOptions.map(opt => {
+                        const icon = optionMap[opt] || '❓';
+                        return `<span class="option-badge" title="${opt}">${icon}</span>`;
+                    }).join(' ');
+                    
+                    if (options === '') options = 'None';
+                } else {
+                    options = 'N/A';
                 }
 
                 html += `<tr>
@@ -104,8 +156,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Initialize DataTable
         $('#mds-table').DataTable({
             responsive: true,
-            pageLength: 25,
-            order: [[1, 'asc']], // Default sort by description
+            paging: false,
+            order: [[3, 'desc']], // Sort by last updated date
             columnDefs: [
                 { 
                     targets: 0, // Icon column
@@ -113,8 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             ],
             language: {
-                search: "Filter entries:",
-                lengthMenu: "Show _MENU_ entries per page"
+                search: "Filter entries:"
             }
         });
     }
