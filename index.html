@@ -15,6 +15,119 @@
     </header>
     
     <main>
+        <div class="legend-container">
+            <details class="legend-accordion">
+                <summary>📖 Legend - Extensions & Options</summary>
+                <div class="legend-content">
+                    <div class="legend-section">
+                        <h3>🔧 Extensions</h3>
+                        <dl class="legend-list">
+                            <dt><span class="extension-badge">🔐</span> hmac-secret</dt>
+                            <dd>HMAC secret extension that enables the generation of symmetric secrets scoped to credentials</dd>
+                            
+                            <dt><span class="extension-badge">🛡️</span> credProtect</dt>
+                            <dd>Credential protection extension that allows relying parties to specify a protection policy for credentials during creation</dd>
+                            
+                            <dt><span class="extension-badge">🔑</span> largeBlobKey</dt>
+                            <dd>Large blob storage extension that allows storage of large data blobs associated with credentials</dd>
+                            
+                            <dt><span class="extension-badge">📦</span> credBlob</dt>
+                            <dd>Credential blob extension that allows storage of small data blobs during credential creation</dd>
+                            
+                            <dt><span class="extension-badge">📏</span> minPinLength</dt>
+                            <dd>Minimum PIN length extension that allows retrieval of the authenticator's minimum PIN length</dd>
+                            
+                            <dt><span class="extension-badge">🔐+</span> hmac-secret-mc</dt>
+                            <dd>HMAC secret extension variant for multiple credentials</dd>
+                            
+                            <dt><span class="extension-badge">🗝️</span> devicePubKey</dt>
+                            <dd>Device public key extension for enhanced security</dd>
+                            
+                            <dt><span class="extension-badge">🎲</span> prf</dt>
+                            <dd>Pseudo-random function extension</dd>
+                            
+                            <dt><span class="extension-badge">📁</span> largeBlobs</dt>
+                            <dd>Large blob storage extension</dd>
+                            
+                            <dt><span class="extension-badge">👤</span> uvm</dt>
+                            <dd>User verification method extension</dd>
+                            
+                            <dt><span class="extension-badge">⚙️</span> credProps</dt>
+                            <dd>Credential properties extension</dd>
+                            
+                            <dt><span class="extension-badge">❓</span> Unknown</dt>
+                            <dd>Extension not recognized or mapped</dd>
+                        </dl>
+                    </div>
+                    
+                    <div class="legend-section">
+                        <h3>⚙️ Options</h3>
+                        <dl class="legend-list">
+                            <dt><span class="option-badge">💻</span> plat (Platform)</dt>
+                            <dd>Indicates whether the authenticator is a platform authenticator (built into the device)</dd>
+                            
+                            <dt><span class="option-badge">💾</span> rk (Resident Key)</dt>
+                            <dd>Indicates whether the authenticator can store keys locally (client-side discoverable credentials)</dd>
+                            
+                            <dt><span class="option-badge">🔢</span> clientPin</dt>
+                            <dd>Indicates whether the authenticator supports client PIN for user verification</dd>
+                            
+                            <dt><span class="option-badge">👆</span> up (User Presence)</dt>
+                            <dd>Indicates whether the authenticator supports user presence verification (e.g., touch sensor)</dd>
+                            
+                            <dt><span class="option-badge">👁️</span> uv (User Verification)</dt>
+                            <dd>Indicates whether the authenticator supports user verification (e.g., biometrics, PIN)</dd>
+                            
+                            <dt><span class="option-badge">🎫</span> pinUvAuthToken</dt>
+                            <dd>Indicates support for PIN/UV auth token</dd>
+                            
+                            <dt><span class="option-badge">🚫</span> noMcGaPermissionsWithClientPin</dt>
+                            <dd>Indicates restrictions on make credential and get assertion permissions with client PIN</dd>
+                            
+                            <dt><span class="option-badge">📁</span> largeBlobs</dt>
+                            <dd>Indicates support for large blob storage</dd>
+                            
+                            <dt><span class="option-badge">🏢</span> ep (Enterprise)</dt>
+                            <dd>Indicates enterprise attestation support</dd>
+                            
+                            <dt><span class="option-badge">👆📝</span> bioEnroll</dt>
+                            <dd>Indicates whether the authenticator supports biometric enrollment operations</dd>
+                            
+                            <dt><span class="option-badge">👤⚙️</span> userVerificationMgmtPreview</dt>
+                            <dd>Indicates support for user verification management preview</dd>
+                            
+                            <dt><span class="option-badge">👁️📝</span> uvBioEnroll</dt>
+                            <dd>Indicates whether user verification is required for biometric enrollment</dd>
+                            
+                            <dt><span class="option-badge">⚙️</span> authnrCfg</dt>
+                            <dd>Indicates whether the authenticator supports authenticator configuration operations</dd>
+                            
+                            <dt><span class="option-badge">👁️⚙️</span> uvAcfg</dt>
+                            <dd>Indicates whether user verification is required for authenticator configuration</dd>
+                            
+                            <dt><span class="option-badge">📋</span> credMgmt</dt>
+                            <dd>Indicates whether the authenticator supports credential management operations</dd>
+                            
+                            <dt><span class="option-badge">📋👁️</span> credentialMgmtPreview</dt>
+                            <dd>Indicates support for the preview version of credential management</dd>
+                            
+                            <dt><span class="option-badge">📏🔢</span> setMinPINLength</dt>
+                            <dd>Indicates whether the authenticator supports setting a minimum PIN length</dd>
+                            
+                            <dt><span class="option-badge">✅</span> makeCredUvNotRqd</dt>
+                            <dd>Indicates whether user verification is not required for credential creation</dd>
+                            
+                            <dt><span class="option-badge">👁️🔒</span> alwaysUv</dt>
+                            <dd>Indicates whether the authenticator always requires user verification</dd>
+                            
+                            <dt><span class="option-badge">❓</span> Unknown</dt>
+                            <dd>Option not recognized or mapped</dd>
+                        </dl>
+                    </div>
+                </div>
+            </details>
+        </div>
+        
         <div id="results" class="results-container">
             <p>Loading data...</p>
         </div>
