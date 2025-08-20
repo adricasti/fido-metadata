@@ -76,10 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         'minPinLength': '📏',
                         'hmac-secret-mc': '🔐+',
                         'devicePubKey': '🗝️',
-                        'prf': '🎲',
-                        'largeBlobs': '📁',
-                        'uvm': '👤',
-                        'credProps': '⚙️'
+                        'largeBlob': '📁',
+                        'uvm': '👤'
                     };
                     
                     extensions = supportedExtensions.map(ext => {
