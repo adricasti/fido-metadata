@@ -58,6 +58,10 @@
     sort: { col: 'updated', dir: 'desc' },
   };
 
+  function emptyFilters() {
+    return { protocol: [], status: [], extensions: [], options: [], query: '' };
+  }
+
   // ── Data helpers ─────────────────────────────────────────────────────────────
   function parseEntry(entry) {
     const ms = entry.metadataStatement;
@@ -72,7 +76,8 @@
       status,
       date: entry.timeOfLastStatusChange || '',
       icon: ms.icon || null,
-      extensions: (ms.authenticatorGetInfo || {}).extensions || [],
+      // "exts" is a container marker, not an actual extension capability.
+      extensions: ((ms.authenticatorGetInfo || {}).extensions || []).filter(ext => ext !== 'exts'),
       options:    (ms.authenticatorGetInfo || {}).options    || {},
       raw: entry,
     };
@@ -105,7 +110,7 @@
   // ── Routing ──────────────────────────────────────────────────────────────────
   function parseHash() {
     const hash = window.location.hash.replace(/^#\/?/, '');
-    if (!hash) return { view: 'list', filters: null };
+    if (!hash) return { view: 'list', filters: emptyFilters() };
 
     if (hash.startsWith('device/')) {
       return { view: 'device', id: decodeURIComponent(hash.slice(7)) };
@@ -126,7 +131,7 @@
       };
     }
 
-    return { view: 'list', filters: null };
+    return { view: 'list', filters: emptyFilters() };
   }
 
   function buildHash(filters, deviceId) {
@@ -394,10 +399,8 @@
       showModal(route.id);
     } else {
       closeModal();
-      if (route.filters) {
-        state.filters = route.filters;
-        document.getElementById('search-input').value = route.filters.query || '';
-      }
+      state.filters = route.filters || emptyFilters();
+      document.getElementById('search-input').value = state.filters.query || '';
       renderResults();
     }
   }

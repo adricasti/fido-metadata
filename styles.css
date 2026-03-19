@@ -218,7 +218,7 @@ thead th {
   text-align: left;
   white-space: nowrap;
   position: sticky;
-  top: 54px; /* header height */
+  top: 0;
 }
 thead th.sortable {
   cursor: pointer;
