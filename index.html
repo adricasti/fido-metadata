@@ -1,144 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIDO Metatada Explorer</title>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIDO Metadata Explorer</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+  <header>
+    <div class="header-content">
+      <div class="header-title">
         <h1>FIDO Metadata Explorer</h1>
-        <p>Explore advertised features for certified authenticators</p>
-        <p id="metadata-version"></p>
-    </header>
-    
-    <main>
-        <div class="legend-container">
-            <details class="legend-accordion">
-                <summary>📖 Legend - Extensions & Options</summary>
-                <div class="legend-content">
-                    <div class="legend-section">
-                        <h3>🔧 Extensions</h3>
-                        <dl class="legend-list">
-                            <dt><span class="extension-badge">🔐</span> hmac-secret</dt>
-                            <dd>HMAC secret extension that enables the generation of symmetric secrets scoped to credentials</dd>
-                            
-                            <dt><span class="extension-badge">🛡️</span> credProtect</dt>
-                            <dd>Credential protection extension that allows relying parties to specify a protection policy for credentials during creation</dd>
-                            
-                            <dt><span class="extension-badge">🔑</span> largeBlobKey</dt>
-                            <dd>Large blob storage extension that allows storage of large data blobs associated with credentials</dd>
-                            
-                            <dt><span class="extension-badge">📦</span> credBlob</dt>
-                            <dd>Credential blob extension that allows storage of small data blobs during credential creation</dd>
-                            
-                            <dt><span class="extension-badge">📏</span> minPinLength</dt>
-                            <dd>Minimum PIN length extension that allows retrieval of the authenticator's minimum PIN length</dd>
-                            
-                            <dt><span class="extension-badge">🔐+</span> hmac-secret-mc</dt>
-                            <dd>HMAC secret extension variant for multiple credentials</dd>
-                            
-                            <dt><span class="extension-badge">🗝️</span> devicePubKey</dt>
-                            <dd>Device public key extension for enhanced security</dd>
-                            
-                            <dt><span class="extension-badge">🎲</span> prf</dt>
-                            <dd>Pseudo-random function extension</dd>
-                            
-                            <dt><span class="extension-badge">📁</span> largeBlobs</dt>
-                            <dd>Large blob storage extension</dd>
-                            
-                            <dt><span class="extension-badge">👤</span> uvm</dt>
-                            <dd>User verification method extension</dd>
-                            
-                            <dt><span class="extension-badge">⚙️</span> credProps</dt>
-                            <dd>Credential properties extension</dd>
-                            
-                            <dt><span class="extension-badge">❓</span> Unknown</dt>
-                            <dd>Extension not recognized or mapped</dd>
-                        </dl>
-                    </div>
-                    
-                    <div class="legend-section">
-                        <h3>⚙️ Options</h3>
-                        <dl class="legend-list">
-                            <dt><span class="option-badge">💻</span> plat (Platform)</dt>
-                            <dd>Indicates whether the authenticator is a platform authenticator (built into the device)</dd>
-                            
-                            <dt><span class="option-badge">💾</span> rk (Resident Key)</dt>
-                            <dd>Indicates whether the authenticator can store keys locally (client-side discoverable credentials)</dd>
-                            
-                            <dt><span class="option-badge">🔢</span> clientPin</dt>
-                            <dd>Indicates whether the authenticator supports client PIN for user verification</dd>
-                            
-                            <dt><span class="option-badge">👆</span> up (User Presence)</dt>
-                            <dd>Indicates whether the authenticator supports user presence verification (e.g., touch sensor)</dd>
-                            
-                            <dt><span class="option-badge">👁️</span> uv (User Verification)</dt>
-                            <dd>Indicates whether the authenticator supports user verification (e.g., biometrics, PIN)</dd>
-                            
-                            <dt><span class="option-badge">🎫</span> pinUvAuthToken</dt>
-                            <dd>Indicates support for PIN/UV auth token</dd>
-                            
-                            <dt><span class="option-badge">🚫</span> noMcGaPermissionsWithClientPin</dt>
-                            <dd>Indicates restrictions on make credential and get assertion permissions with client PIN</dd>
-                            
-                            <dt><span class="option-badge">📁</span> largeBlobs</dt>
-                            <dd>Indicates support for large blob storage</dd>
-                            
-                            <dt><span class="option-badge">🏢</span> ep (Enterprise)</dt>
-                            <dd>Indicates enterprise attestation support</dd>
-                            
-                            <dt><span class="option-badge">👆📝</span> bioEnroll</dt>
-                            <dd>Indicates whether the authenticator supports biometric enrollment operations</dd>
-                            
-                            <dt><span class="option-badge">👤⚙️</span> userVerificationMgmtPreview</dt>
-                            <dd>Indicates support for user verification management preview</dd>
-                            
-                            <dt><span class="option-badge">👁️📝</span> uvBioEnroll</dt>
-                            <dd>Indicates whether user verification is required for biometric enrollment</dd>
-                            
-                            <dt><span class="option-badge">⚙️</span> authnrCfg</dt>
-                            <dd>Indicates whether the authenticator supports authenticator configuration operations</dd>
-                            
-                            <dt><span class="option-badge">👁️⚙️</span> uvAcfg</dt>
-                            <dd>Indicates whether user verification is required for authenticator configuration</dd>
-                            
-                            <dt><span class="option-badge">📋</span> credMgmt</dt>
-                            <dd>Indicates whether the authenticator supports credential management operations</dd>
-                            
-                            <dt><span class="option-badge">📋👁️</span> credentialMgmtPreview</dt>
-                            <dd>Indicates support for the preview version of credential management</dd>
-                            
-                            <dt><span class="option-badge">📏🔢</span> setMinPINLength</dt>
-                            <dd>Indicates whether the authenticator supports setting a minimum PIN length</dd>
-                            
-                            <dt><span class="option-badge">✅</span> makeCredUvNotRqd</dt>
-                            <dd>Indicates whether user verification is not required for credential creation</dd>
-                            
-                            <dt><span class="option-badge">👁️🔒</span> alwaysUv</dt>
-                            <dd>Indicates whether the authenticator always requires user verification</dd>
-                            
-                            <dt><span class="option-badge">❓</span> Unknown</dt>
-                            <dd>Option not recognized or mapped</dd>
-                        </dl>
-                    </div>
-                </div>
-            </details>
-        </div>
-        
-        <div id="results" class="results-container">
-            <p>Loading data...</p>
-        </div>
-    </main>
+        <p class="subtitle">Explore certified authenticator metadata</p>
+      </div>
+      <span id="metadata-version" class="header-meta"></span>
+    </div>
+  </header>
 
-    <footer>
-        <p id="legal-header"></p>
-    </footer>
+  <main>
+    <div class="filter-bar">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search devices…" autocomplete="off">
+      </div>
+      <div class="filter-chips" id="filter-chips"></div>
+      <button id="clear-filters" class="btn-clear hidden">Clear all</button>
+      <button id="toggle-filters" class="btn-filter">⚙ Filters</button>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="main.js"></script>
+    <div id="filter-panel" class="filter-panel hidden">
+      <div class="filter-group">
+        <h3>Protocol</h3>
+        <div class="filter-options" id="filter-protocol"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Certification Status</h3>
+        <div class="filter-options" id="filter-status"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Extensions</h3>
+        <div class="filter-options" id="filter-extensions"></div>
+      </div>
+      <div class="filter-group">
+        <h3>Options</h3>
+        <div class="filter-options" id="filter-options"></div>
+      </div>
+    </div>
+
+    <div class="results-info">
+      <span id="results-count"></span>
+    </div>
+
+    <div class="table-wrapper">
+      <table id="mds-table">
+        <thead>
+          <tr>
+            <th class="col-icon"></th>
+            <th class="col-description sortable" data-col="description">Description <span class="sort-icon">↕</span></th>
+            <th class="col-protocol sortable" data-col="protocol">Protocol <span class="sort-icon">↕</span></th>
+            <th class="col-status sortable" data-col="status">Status <span class="sort-icon">↕</span></th>
+            <th class="col-updated sortable" data-col="updated">Updated <span class="sort-icon">↕</span></th>
+            <th class="col-extensions">Extensions</th>
+            <th class="col-options">Options</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="7" class="loading">Loading data…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="device-modal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+      <div class="modal-content" id="modal-content"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p id="legal-header"></p>
+  </footer>
+
+  <script src="main.js"></script>
 </body>
 </html>
