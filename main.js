@@ -4,7 +4,7 @@
   // ── Maps ────────────────────────────────────────────────────────────────────
   const EXT_MAP = {
     'hmac-secret':            { icon: '🔐', label: 'HMAC Secret' },
-    'hmac-secret-mc':         { icon: '🔐', label: 'HMAC Secret (multi-cred)' },
+    'hmac-secret-mc':         { icon: '🔐', label: 'HMAC Secret MakeCredential' },
     'credProtect':            { icon: '🛡️', label: 'Credential Protection' },
     'largeBlobKey':           { icon: '🔑', label: 'Large Blob Key' },
     'credBlob':               { icon: '📦', label: 'Credential Blob' },
@@ -12,13 +12,9 @@
     'devicePubKey':           { icon: '🗝️', label: 'Device Public Key' },
     'prf':                    { icon: '🎲', label: 'PRF' },
     'largeBlob':              { icon: '📁', label: 'Large Blob' },
-    'largeBlobs':             { icon: '📁', label: 'Large Blobs' },
     'uvm':                    { icon: '👤', label: 'User Verification Method' },
-    'credProps':              { icon: '⚙️',  label: 'Credential Properties' },
-    'enterpriseAttestation':  { icon: '🏢', label: 'Enterprise Attestation' },
     'loc':                    { icon: '📍', label: 'Location' },
     'txAuthSimple':           { icon: '✍️',  label: 'Simple Transaction Auth' },
-    'exts':                   { icon: '🔧', label: 'Extensions' },
   };
 
   const OPT_MAP = {
@@ -30,13 +26,14 @@
     'pinUvAuthToken':                { icon: '🎫', label: 'PIN/UV Auth Token' },
     'noMcGaPermissionsWithClientPin':{ icon: '🚫', label: 'No MC/GA w/ Client PIN' },
     'largeBlobs':                    { icon: '📁', label: 'Large Blobs' },
-    'ep':                            { icon: '🏢', label: 'Enterprise' },
+    'ep':                            { icon: '🏢', label: 'Enterprise Attestation' },
     'bioEnroll':                     { icon: '🧬', label: 'Bio Enrollment' },
     'userVerificationMgmtPreview':   { icon: '👤', label: 'UV Mgmt Preview' },
     'uvBioEnroll':                   { icon: '👁️',  label: 'UV Bio Enroll' },
     'authnrCfg':                     { icon: '⚙️',  label: 'Authenticator Config' },
     'uvAcfg':                        { icon: '🔒', label: 'UV Auth Config' },
     'credMgmt':                      { icon: '📋', label: 'Credential Management' },
+    'perCredMgmtRO':                 { icon: '📄', label: 'Credential Read Only support' },
     'credentialMgmtPreview':         { icon: '📋', label: 'Cred Mgmt Preview' },
     'setMinPINLength':               { icon: '📏', label: 'Set Min PIN Length' },
     'makeCredUvNotRqd':              { icon: '✅', label: 'Make Cred UV Not Req.' },
