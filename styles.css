@@ -337,6 +337,68 @@ tbody td {
 .badge:hover .badge-tooltip { opacity: 1; }
 .no-badges { color: var(--gray-400); font-size: 0.8rem; }
 
+/* Fixed grid layout for extensions and options */
+.fixed-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), 1fr);
+  gap: 4px;
+  width: 100%;
+}
+.grid-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  position: relative;
+}
+.grid-cell.has-item { background: transparent; }
+.grid-cell.empty {
+  background: var(--gray-100);
+  border-radius: 4px;
+  opacity: 0.4;
+}
+.grid-cell.proprietary-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 2px;
+}
+.badge.proprietary {
+  position: relative;
+  display: inline-block;
+  cursor: default;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+/* Compact bars for table-side capability comparison */
+.cap-bars {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+}
+.cap-bar {
+  width: 8px;
+  height: 16px;
+  position: relative;
+  display: inline-block;
+}
+.cap-bar::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0;
+  width: 4px;
+  height: 16px;
+  border-radius: 1px;
+  background: var(--gray-200);
+}
+.cap-bar.present::before { background: #16a34a; }
+.cap-bar.absent::before { background: var(--gray-200); }
+.cap-bar.proprietary::before { background: #f59e0b; }
+
 /* Empty / loading states */
 .loading, .empty {
   text-align: center;

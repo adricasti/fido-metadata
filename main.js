@@ -183,6 +183,70 @@
     }).join('') + '</div>';
   }
 
+  function createFixedGrid(values, map, includeProprietaryColumn = false, optionValues = null) {
+    const allKnownKeys = Object.keys(map).sort();
+    const cols = allKnownKeys.length + (includeProprietaryColumn ? 1 : 0);
+    const valueSet = new Set(values);
+
+    let html = `<div class="fixed-grid" style="--grid-cols: ${cols}">`;
+
+    // Add cells for all known values
+    allKnownKeys.forEach(key => {
+      if (valueSet.has(key)) {
+        const m = map[key];
+        const optValue = optionValues ? optionValues[key] : null;
+        const tooltip = optValue !== null
+          ? `${esc(m.label)} = ${esc(String(optValue))}`
+          : esc(m.label);
+        html += `<span class="grid-cell has-item"><span class="badge"><span class="badge-tooltip">${tooltip}</span>${m.icon}</span></span>`;
+      } else {
+        html += `<span class="grid-cell empty"></span>`;
+      }
+    });
+
+    // If proprietary column, handle custom extensions/options
+    if (includeProprietaryColumn) {
+      const proprietary = values.filter(v => !allKnownKeys.includes(v));
+      if (proprietary.length > 0) {
+        html += `<span class="grid-cell proprietary-container">`;
+        proprietary.forEach(prop => {
+          const tooltip = optionValues ? `${esc(prop)} = ${esc(String(optionValues[prop]))}` : `Custom: ${esc(prop)}`;
+          html += `<span class="badge proprietary"><span class="badge-tooltip">${tooltip}</span>⚙️</span>`;
+        });
+        html += `</span>`;
+      } else {
+        html += `<span class="grid-cell empty"></span>`;
+      }
+    }
+
+    html += `</div>`;
+    return html;
+  }
+
+  function capabilityBarsHtml(values, map, includeProprietaryColumn = false) {
+    const knownKeys = Object.keys(map);
+    const present = new Set(values || []);
+    let html = '<div class="cap-bars">';
+
+    knownKeys.forEach(key => {
+      const m = map[key] || { label: key };
+      const isPresent = present.has(key);
+      html += `<span class="cap-bar ${isPresent ? 'present' : 'absent'}" title="${esc(m.label)}: ${isPresent ? 'present' : 'absent'}" aria-label="${esc(m.label)}: ${isPresent ? 'present' : 'absent'}"></span>`;
+    });
+
+    if (includeProprietaryColumn) {
+      const proprietary = (values || []).filter(v => !(v in map));
+      const hasProprietary = proprietary.length > 0;
+      const proprietaryTitle = hasProprietary
+        ? `Proprietary extension: ${proprietary.join(', ')}`
+        : 'Proprietary extension: none';
+      html += `<span class="cap-bar ${hasProprietary ? 'proprietary' : 'absent'}" title="${esc(proprietaryTitle)}" aria-label="${esc(proprietaryTitle)}"></span>`;
+    }
+
+    html += '</div>';
+    return html;
+  }
+
   function renderTable(entries) {
     const tbody = document.getElementById('table-body');
     if (!entries.length) {
@@ -200,8 +264,8 @@
         <td><span class="protocol-tag">${esc(e.protocol.toUpperCase())}</span></td>
         <td><span class="status-badge status-${esc(e.status)}">${esc(STATUS_LABELS[e.status] || e.status)}</span></td>
         <td>${esc(formatDate(e.date))}</td>
-        <td>${badgesHtml(e.extensions, EXT_MAP)}</td>
-        <td>${badgesHtml(optKeys, OPT_MAP)}</td>
+        <td>${capabilityBarsHtml(e.extensions, EXT_MAP, true)}</td>
+        <td>${capabilityBarsHtml(optKeys, OPT_MAP, false)}</td>
       </tr>`;
     }).join('');
 
@@ -333,11 +397,8 @@
         <div class="detail-section">
           <h3>Extensions</h3>
           <div class="detail-badges">
-            ${entry.extensions.length
-              ? entry.extensions.map(x => {
-                  const m = EXT_MAP[x] || { icon: '❓', label: x };
-                  return `<span class="detail-badge"><span class="icon">${m.icon}</span>${esc(m.label)}</span>`;
-                }).join('')
+            ${entry.extensions.length || Object.keys(EXT_MAP).length > 0
+              ? createFixedGrid(entry.extensions, EXT_MAP, true, null)
               : '<span class="no-badges">None</span>'}
           </div>
         </div>
@@ -345,11 +406,8 @@
         <div class="detail-section">
           <h3>Options</h3>
           <div class="detail-badges">
-            ${optKeys.length
-              ? optKeys.map(o => {
-                  const m = OPT_MAP[o] || { icon: '❓', label: o };
-                  return `<span class="detail-badge"><span class="icon">${m.icon}</span>${esc(m.label)}<span class="option-value">${esc(String(entry.options[o]))}</span></span>`;
-                }).join('')
+            ${optKeys.length || Object.keys(OPT_MAP).length > 0
+              ? createFixedGrid(optKeys, OPT_MAP, false, entry.options)
               : '<span class="no-badges">None</span>'}
           </div>
         </div>
