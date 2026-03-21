@@ -348,13 +348,15 @@ tbody td {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 28px;
+  height: 32px;
+  min-height: 32px;
+  width: 100%;
   position: relative;
+  border-radius: 4px;
 }
 .grid-cell.has-item { background: transparent; }
-.grid-cell.empty {
+.grid-cell.is-empty {
   background: var(--gray-100);
-  border-radius: 4px;
   opacity: 0.4;
 }
 .grid-cell.proprietary-container {

@@ -168,8 +168,29 @@
   function sortEntries(entries, sort) {
     const dir = sort.dir === 'asc' ? 1 : -1;
     return [...entries].sort((a, b) => {
-      const av = { description: a.description, protocol: a.protocol, status: a.status, updated: a.date }[sort.col] || '';
-      const bv = { description: b.description, protocol: b.protocol, status: b.status, updated: b.date }[sort.col] || '';
+      const extKnown = Object.keys(EXT_MAP);
+      const optKnown = Object.keys(OPT_MAP);
+      const aExtensions = a.extensions.filter(x => extKnown.includes(x)).length;
+      const bExtensions = b.extensions.filter(x => extKnown.includes(x)).length;
+      const aOptions = optKnown.filter(k => k in a.options).length;
+      const bOptions = optKnown.filter(k => k in b.options).length;
+
+      const av = {
+        description: a.description,
+        protocol: a.protocol,
+        status: a.status,
+        updated: a.date,
+        extensions: aExtensions,
+        options: aOptions,
+      }[sort.col] || '';
+      const bv = {
+        description: b.description,
+        protocol: b.protocol,
+        status: b.status,
+        updated: b.date,
+        extensions: bExtensions,
+        options: bOptions,
+      }[sort.col] || '';
       return av < bv ? -dir : av > bv ? dir : 0;
     });
   }
@@ -200,7 +221,7 @@
           : esc(m.label);
         html += `<span class="grid-cell has-item"><span class="badge"><span class="badge-tooltip">${tooltip}</span>${m.icon}</span></span>`;
       } else {
-        html += `<span class="grid-cell empty"></span>`;
+        html += `<span class="grid-cell is-empty"></span>`;
       }
     });
 
@@ -215,7 +236,7 @@
         });
         html += `</span>`;
       } else {
-        html += `<span class="grid-cell empty"></span>`;
+        html += `<span class="grid-cell is-empty"></span>`;
       }
     }
 
