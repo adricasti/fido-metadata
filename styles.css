@@ -66,6 +66,22 @@ h1 {
   white-space: nowrap;
 }
 
+header a {
+  color: #fef3c7;
+  text-decoration-color: rgba(254, 243, 199, 0.65);
+}
+
+header a:visited {
+  color: #fde68a;
+  text-decoration-color: rgba(253, 230, 138, 0.7);
+}
+
+header a:hover,
+header a:focus-visible {
+  color: #ffffff;
+  text-decoration-color: #ffffff;
+}
+
 /* ── Main ───────────────────────────────────────────────────────────────────── */
 main {
   flex: 1;

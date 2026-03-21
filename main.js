@@ -112,6 +112,23 @@
     return status;
   }
 
+  function statusSortValue(status) {
+    const s = String(status || '').toUpperCase();
+    if (s === 'REVOKED') return -1;
+    if (s === 'NOT_FIDO_CERTIFIED') return 0;
+    if (s === 'FIDO_CERTIFIED') return 1;
+
+    const match = s.match(/^FIDO_CERTIFIED_L([1-3])(?:_?PLUS)?$/);
+    if (match) {
+      const base = Number(match[1]);
+      const plus = /PLUS$/.test(s) ? 0.5 : 0;
+      return base + plus;
+    }
+
+    // Keep unknown/non-certification statuses grouped after explicit rankings.
+    return Number.NEGATIVE_INFINITY;
+  }
+
   // ── Routing ──────────────────────────────────────────────────────────────────
   function parseHash() {
     const hash = window.location.hash.replace(/^#\/?/, '');
@@ -176,6 +193,16 @@
   function sortEntries(entries, sort) {
     const dir = sort.dir === 'asc' ? 1 : -1;
     return [...entries].sort((a, b) => {
+      if (sort.col === 'status') {
+        const as = statusSortValue(a.status);
+        const bs = statusSortValue(b.status);
+        if (as !== bs) return (as < bs ? -1 : 1) * dir;
+
+        const al = formatStatusLabel(a.status);
+        const bl = formatStatusLabel(b.status);
+        return al < bl ? -dir : al > bl ? dir : 0;
+      }
+
       const extKnown = Object.keys(EXT_MAP);
       const optKnown = Object.keys(OPT_MAP);
       const aExtensions = a.extensions.filter(x => extKnown.includes(x)).length;
@@ -186,7 +213,6 @@
       const av = {
         description: a.description,
         protocol: a.protocol,
-        status: a.status,
         updated: a.date,
         extensions: aExtensions,
         options: aOptions,
@@ -194,7 +220,6 @@
       const bv = {
         description: b.description,
         protocol: b.protocol,
-        status: b.status,
         updated: b.date,
         extensions: bExtensions,
         options: bOptions,
