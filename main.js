@@ -42,8 +42,6 @@
 
   const STATUS_LABELS = {
     'FIDO_CERTIFIED':     'Certified',
-    'FIDO_CERTIFIED_L1':  'Certified L1',
-    'FIDO_CERTIFIED_L2':  'Certified L2',
     'NOT_FIDO_CERTIFIED': 'Not Certified',
     'REVOKED':            'Revoked',
   };
@@ -102,6 +100,16 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  function formatStatusLabel(status) {
+    if (STATUS_LABELS[status]) return STATUS_LABELS[status];
+    const match = String(status).match(/^FIDO_CERTIFIED_L([1-3])(?:_?PLUS)?$/i);
+    if (match) {
+      const hasPlus = /PLUS$/i.test(String(status));
+      return `Certified L${match[1]}${hasPlus ? '+' : ''}`;
+    }
+    return status;
   }
 
   // ── Routing ──────────────────────────────────────────────────────────────────
@@ -283,7 +291,7 @@
         <td class="col-icon">${iconHtml}</td>
         <td><div class="device-description">${esc(e.description)}</div><div class="device-id">${esc(e.id)}</div></td>
         <td><span class="protocol-tag">${esc(e.protocol.toUpperCase())}</span></td>
-        <td><span class="status-badge status-${esc(e.status)}">${esc(STATUS_LABELS[e.status] || e.status)}</span></td>
+        <td><span class="status-badge status-${esc(e.status)}">${esc(formatStatusLabel(e.status))}</span></td>
         <td>${esc(formatDate(e.date))}</td>
         <td>${capabilityBarsHtml(e.extensions, EXT_MAP, true)}</td>
         <td>${capabilityBarsHtml(optKeys, OPT_MAP, false)}</td>
@@ -307,7 +315,7 @@
   function renderChips() {
     const chips = [
       ...state.filters.protocol.map(v   => ({ type: 'protocol',   value: v, label: v.toUpperCase() })),
-      ...state.filters.status.map(v     => ({ type: 'status',     value: v, label: STATUS_LABELS[v] || v })),
+      ...state.filters.status.map(v     => ({ type: 'status',     value: v, label: formatStatusLabel(v) })),
       ...state.filters.extensions.map(v => ({ type: 'extensions', value: v, label: `${(EXT_MAP[v] || {}).icon || '❓'} ${(EXT_MAP[v] || {}).label || v}` })),
       ...state.filters.options.map(v    => ({ type: 'options',    value: v, label: `${(OPT_MAP[v] || {}).icon || '❓'} ${(OPT_MAP[v] || {}).label || v}` })),
       ...(state.filters.query ? [{ type: 'query', value: state.filters.query, label: `"${state.filters.query}"` }] : []),
@@ -331,7 +339,7 @@
     const opts      = [...new Set(allEntries.flatMap(e => Object.keys(e.options)))].sort();
 
     fillCheckboxGroup('filter-protocol',   protocols, state.filters.protocol,   'protocol',   v => v.toUpperCase());
-    fillCheckboxGroup('filter-status',     statuses,  state.filters.status,     'status',     v => STATUS_LABELS[v] || v);
+    fillCheckboxGroup('filter-status',     statuses,  state.filters.status,     'status',     v => formatStatusLabel(v));
     fillCheckboxGroup('filter-extensions', exts,      state.filters.extensions, 'extensions', v => `${(EXT_MAP[v] || {}).icon || '❓'} ${(EXT_MAP[v] || {}).label || v}`);
     fillCheckboxGroup('filter-options',    opts,      state.filters.options,    'options',    v => `${(OPT_MAP[v] || {}).icon || '❓'} ${(OPT_MAP[v] || {}).label || v}`);
   }
@@ -406,7 +414,7 @@
           </div>
           <div class="detail-item">
             <label>Status</label>
-            <span><span class="status-badge status-${esc(entry.status)}">${esc(STATUS_LABELS[entry.status] || entry.status)}</span></span>
+            <span><span class="status-badge status-${esc(entry.status)}">${esc(formatStatusLabel(entry.status))}</span></span>
           </div>
           <div class="detail-item">
             <label>Last Updated</label>

@@ -290,9 +290,28 @@ tbody td {
   font-weight: 600;
   white-space: nowrap;
 }
-.status-FIDO_CERTIFIED     { background: #d1fae5; color: #065f46; }
-.status-FIDO_CERTIFIED_L1  { background: #d1fae5; color: #065f46; }
-.status-FIDO_CERTIFIED_L2  { background: #a7f3d0; color: #064e3b; }
+.status-FIDO_CERTIFIED,
+.status-FIDO_CERTIFIED_L1,
+.status-FIDO_CERTIFIED_L1plus,
+.status-FIDO_CERTIFIED_L1_PLUS {
+  background: #f3d9b1;
+  color: #5b3a16;
+}
+
+.status-FIDO_CERTIFIED_L2,
+.status-FIDO_CERTIFIED_L2plus,
+.status-FIDO_CERTIFIED_L2_PLUS {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.status-FIDO_CERTIFIED_L3,
+.status-FIDO_CERTIFIED_L3plus,
+.status-FIDO_CERTIFIED_L3_PLUS {
+  background: #fde68a;
+  color: #713f12;
+}
+
 .status-NOT_FIDO_CERTIFIED { background: #fee2e2; color: #991b1b; }
 .status-REVOKED            { background: #fecaca; color: #7f1d1d; }
 
