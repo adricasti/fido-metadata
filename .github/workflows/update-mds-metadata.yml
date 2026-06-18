@@ -1,0 +1,48 @@
+name: Update FIDO Metadata
+
+on:
+  schedule:
+    # Runs at 06:00 UTC on the 10th day of every month.
+    - cron: '0 6 10 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Download FIDO metadata JWT
+        run: |
+          curl -fsSL \
+            --retry 5 \
+            --retry-delay 5 \
+            --retry-all-errors \
+            https://mds3.fidoalliance.org \
+            -o /tmp/mds.jwt
+
+      - name: Decode JWT payload into mds_metadata.json
+        run: node scripts/update-mds-metadata.js /tmp/mds.jwt mds_metadata.json
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- mds_metadata.json; then
+            echo "No metadata changes detected."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mds_metadata.json
+          git commit -m "chore: update FIDO metadata"
+          git push
