@@ -2,8 +2,8 @@ name: Update FIDO Metadata
 
 on:
   schedule:
-    # Runs at 06:00 UTC on the 10th day of every month.
-    - cron: '0 6 10 * *'
+    # Runs at 06:00 UTC every Sunday.
+    - cron: '0 6 * * 0'
   workflow_dispatch:
 
 permissions:
