@@ -4,6 +4,8 @@
 
 const fs = require('fs');
 
+const CONVENIENCE_METADATA_URL = 'https://c-mds.fidoalliance.org';
+
 function toBase64(base64Url) {
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const padding = (4 - (base64.length % 4)) % 4;
@@ -38,12 +40,28 @@ function decodePayload(token) {
   return JSON.parse(jsonText);
 }
 
-function main() {
+async function fetchJson(url) {
+  const response = await fetch(url, {
+    headers: {
+      Accept: 'application/json',
+      'User-Agent': 'fido-metadata-updater',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+async function main() {
   const inputPath = process.argv[2];
   const outputPath = process.argv[3] || 'mds_metadata.json';
+  const convenienceOutputPath = process.argv[4] || 'convenience-metadata.json';
 
   if (!inputPath) {
-    throw new Error('Usage: node scripts/update-mds-metadata.js <input.jwt> [output.json]');
+    throw new Error('Usage: node scripts/update-mds-metadata.js <input.jwt> [mds_output.json] [convenience_output.json]');
   }
 
   const rawToken = fs.readFileSync(inputPath, 'utf8');
@@ -52,13 +70,21 @@ function main() {
 
   fs.writeFileSync(outputPath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
 
+  const convenienceMetadata = await fetchJson(CONVENIENCE_METADATA_URL);
+  fs.writeFileSync(convenienceOutputPath, `${JSON.stringify(convenienceMetadata, null, 2)}\n`, 'utf8');
+
   const no = payload && Object.prototype.hasOwnProperty.call(payload, 'no') ? payload.no : 'unknown';
   const nextUpdate = payload && payload.nextUpdate ? payload.nextUpdate : 'unknown';
+  const convenienceNo = convenienceMetadata && Object.prototype.hasOwnProperty.call(convenienceMetadata, 'no') ? convenienceMetadata.no : 'unknown';
   console.log(`Updated ${outputPath}: no=${no}, nextUpdate=${nextUpdate}`);
+  console.log(`Updated ${convenienceOutputPath}: no=${convenienceNo}`);
 }
 
 try {
-  main();
+  main().catch((err) => {
+    console.error(err.message || err);
+    process.exit(1);
+  });
 } catch (err) {
   console.error(err.message || err);
   process.exit(1);

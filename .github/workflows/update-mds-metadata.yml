@@ -31,18 +31,18 @@ jobs:
             https://mds3.fidoalliance.org \
             -o /tmp/mds.jwt
 
-      - name: Decode JWT payload into mds_metadata.json
-        run: node scripts/update-mds-metadata.js /tmp/mds.jwt mds_metadata.json
+      - name: Decode JWT payload and refresh convenience metadata
+        run: node scripts/update-mds-metadata.js /tmp/mds.jwt mds_metadata.json convenience-metadata.json
 
       - name: Commit and push if changed
         run: |
-          if git diff --quiet -- mds_metadata.json; then
+          if git diff --quiet -- mds_metadata.json convenience-metadata.json; then
             echo "No metadata changes detected."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add mds_metadata.json
+          git add mds_metadata.json convenience-metadata.json
           git commit -m "chore: update FIDO metadata"
           git push

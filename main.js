@@ -51,6 +51,7 @@
   let state = {
     filters: { protocol: [], status: [], extensions: [], options: [], query: '' },
     sort: { col: 'updated', dir: 'desc' },
+    convenienceMetadata: {},
   };
 
   function emptyFilters() {
@@ -100,6 +101,47 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  }
+
+  function getConvenienceEntry(aaguid) {
+    if (!aaguid || !state.convenienceMetadata) return null;
+    const key = String(aaguid).trim().toLowerCase();
+    return state.convenienceMetadata[key] || null;
+  }
+
+  function renderConvenienceSection(aaguid) {
+    const entry = getConvenienceEntry(aaguid);
+    if (!entry) return '';
+
+    const friendlyNames = Object.entries(entry.friendlyNames || {});
+    const nameHtml = friendlyNames.length
+      ? friendlyNames.map(([locale, name]) => `<span class="detail-badge"><strong>${esc(locale)}</strong> ${esc(name)}</span>`).join('')
+      : '<span class="no-badges">No friendly names available.</span>';
+
+    const iconEntries = [
+      { label: 'Authenticator', variant: 'Normal', src: entry.icon || null },
+      { label: 'Authenticator', variant: 'Dark', src: entry.iconDark || null },
+      { label: 'Provider', variant: 'Normal', src: entry.providerLogoLight || entry.providerLogo || null },
+      { label: 'Provider', variant: 'Dark', src: entry.providerLogoDark || null },
+    ];
+
+    const iconHtml = iconEntries.map(({ label, variant, src }) => {
+      const title = `${label} ${variant}`;
+      if (!src) {
+        return `<div class="convenience-icon-card empty"><div class="convenience-icon-label">${esc(title)}</div><span class="no-badges">Not available</span></div>`;
+      }
+
+      return `<div class="convenience-icon-card"><div class="convenience-icon-label">${esc(title)}</div><img src="${esc(src)}" alt="${esc(title)}" class="convenience-icon"></div>`;
+    }).join('');
+
+    return `
+      <div class="detail-section convenience-section">
+        <h3>Convenience Metadata</h3>
+        <div class="detail-subheading">Friendly Names</div>
+        <div class="detail-badges">${nameHtml}</div>
+        <div class="detail-subheading">Icons</div>
+        <div class="convenience-icons">${iconHtml}</div>
+      </div>`;
   }
 
   function formatStatusLabel(status) {
@@ -469,6 +511,7 @@
         ${uvHtml ? `<div class="detail-section"><h3>User Verification</h3><div class="detail-badges">${uvHtml}</div></div>` : ''}
         ${kpHtml ? `<div class="detail-section"><h3>Key Protection</h3><div class="detail-badges">${kpHtml}</div></div>` : ''}
         ${ahHtml ? `<div class="detail-section"><h3>Attachment Hint</h3><div class="detail-badges">${ahHtml}</div></div>` : ''}
+        ${renderConvenienceSection(entry.id)}
       </div>`;
 
     document.getElementById('device-modal').classList.remove('hidden');
@@ -557,9 +600,19 @@
     window.addEventListener('hashchange', handleHashChange);
 
     // Load data
-    fetch('mds_metadata.json')
-      .then(r => r.json())
-      .then(data => {
+    Promise.all([
+      fetch('mds_metadata.json').then(r => r.json()),
+      fetch('convenience-metadata.json').then(r => r.json()).catch(err => {
+        console.warn('Convenience metadata failed to load:', err);
+        return {};
+      })
+    ])
+      .then(([data, convenienceData]) => {
+        const convenienceMap = Object.fromEntries(
+          Object.entries(convenienceData || {}).filter(([key]) => key !== 'no').map(([key, value]) => [String(key).trim().toLowerCase(), value])
+        );
+
+        state.convenienceMetadata = convenienceMap;
         document.getElementById('metadata-version').textContent =
           `v${data.no} · Next update: ${data.nextUpdate}`;
         document.getElementById('legal-header').textContent = data.legalHeader || '';
